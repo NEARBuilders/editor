@@ -37,27 +37,33 @@ function PanelHeader({ options, onChange }) {
         {options &&
           options.map((it) => <Option value={it.value}>{it.label}</Option>)}
       </Select>
-      <Button onClick={() => Social.set({
-        index: {
-          every: JSON.stringify({
-            key: "thing", // type
-            value: {
-              src: "efiz.near/widget/Tree"
-            }
+      <Button
+        onClick={() =>
+          Social.set({
+            index: {
+              every: JSON.stringify({
+                key: "thing", // type
+                value: {
+                  src: "efiz.near/widget/Tree",
+                },
+              }),
+            },
           })
         }
-      })}>Publish</Button>
+      >
+        Publish
+      </Button>
     </Header>
   );
 }
 
-const [editorValue, setEditorValue] = useState("");
-const [editorSrc, setEditorSrc] = useState("editor.near/widget/markdown.edit");
-const [viewerSrc, setViewerSrc] = useState("editor.near/widget/markdown.view");
-
-function handleEditorChange(value) {
-  setEditorValue(value);
-}
+const [editorSrc, setEditorSrc] = useState(
+  "/*__@appAccount__*//widget/markdown.edit"
+);
+const [viewerSrc, setViewerSrc] = useState(
+  "/*__@appAccount__*//widget/markdown.view"
+);
+const [selectedItem, setSelectedItem] = useState(null);
 
 function handleEditorSrcChange(value) {
   setEditorSrc(value);
@@ -67,9 +73,16 @@ function handleViewerSrcChange(value) {
   setViewerSrc(value);
 }
 
-function Editor({ value, onChange, onSubmit, onCancel }) {
+function Editor({ value }) {
   return (
-    <Widget src={editorSrc} props={{ value, onChange, onSubmit, onCancel }} />
+    <Widget
+      src={"/*__@appAccount__*//widget/provider"}
+      props={{
+        path: value,
+        blockHeight: "final",
+        Children: (p) => <Widget src={editorSrc} props={p} />,
+      }}
+    />
   );
 }
 
@@ -77,27 +90,47 @@ function Viewer({ value }) {
   return <Widget src={viewerSrc} props={{ value }} />;
 }
 
+function Sidebar() {
+  return (
+    <Widget
+      src="/*__@appAccount__*//widget/sidebar"
+      props={{ handleItemClick: (v) => setSelectedItem(v) }}
+    />
+  );
+}
+
 return (
   <Container>
     <Panel>
-      <PanelHeader
-        options={[
-          { value: "editor.near/widget/markdown.edit", label: "Markdown" },
-          { value: "editor.near/widget/code.edit", label: "Code" },
-          { value: "editor.near/widget/canvas.edit", label: "Canvas" },
-        ]}
-        onChange={handleEditorSrcChange}
-      />
       <Wrapper key={editorSrc}>
-        <Editor value={editorValue} onChange={handleEditorChange} />
+        <Sidebar />
       </Wrapper>
     </Panel>
     <Panel>
       <PanelHeader
         options={[
-          { value: "editor.near/widget/markdown.view", label: "Markdown" },
-          { value: "editor.near/widget/code.view", label: "Code" },
-          { value: "editor.near/widget/canvas.view", label: "Canvas" },
+          {
+            value: "/*__@appAccount__*//widget/markdown.edit",
+            label: "Markdown",
+          },
+          { value: "/*__@appAccount__*//widget/code.edit", label: "Code" },
+          { value: "/*__@appAccount__*//widget/canvas.edit", label: "Canvas" },
+        ]}
+        onChange={handleEditorSrcChange}
+      />
+      <Wrapper key={editorSrc}>
+        <Editor value={selectedItem} />
+      </Wrapper>
+    </Panel>
+    <Panel>
+      <PanelHeader
+        options={[
+          {
+            value: "/*__@appAccount__*//widget/markdown.view",
+            label: "Markdown",
+          },
+          { value: "/*__@appAccount__*//widget/code.view", label: "Code" },
+          { value: "/*__@appAccount__*//widget/canvas.view", label: "Canvas" },
         ]}
         onChange={handleViewerSrcChange}
       />

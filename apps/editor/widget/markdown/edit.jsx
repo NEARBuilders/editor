@@ -4,7 +4,7 @@ return (
   <Widget
     src={"efiz.near/widget/SimpleMDE"}
     props={{
-      value,
+      data: { content: value },
       onChange,
       toolbar: [
         "heading",

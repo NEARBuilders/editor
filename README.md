@@ -27,3 +27,4 @@ Pushes to this repository's main branch automatically deploys to _______
 ## TODO
 
 - [ ] Set up github action (what account to deploy to?)
+- [ ] Add a left hand navigation in app
