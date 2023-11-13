@@ -54,68 +54,12 @@ function EventLog({ changeEvents, uiEvents }) {
   );
 }
 
-const ShapeRenderer = ({ shapes }) => {
-  console.log(shapes);
-  
-  return (
-    <div style={{ position: "relative", height: "100%" }}>
-      {(shapes || []).map((shape) => {
-        const { x, y, rotation, opacity, type, props } = shape;
-        const style = {
-          position: "absolute",
-          left: x,
-          top: y,
-          width: props.w,
-          height: props.h,
-          transform: `rotate(${rotation}deg)`,
-          opacity: opacity,
-          backgroundColor:
-            props.fill === "pattern" ? "patternColor" : props.fill,
-          border: props.geo === "rectangle" ? "1px solid black" : "none",
-        };
-
-        if (type === "text") {
-          return (
-            <div key={shape.id} style={style}>
-              <span style={{ fontSize: props.size, color: props.color }}>
-                {props.text}
-              </span>
-            </div>
-          );
-        }
-
-        return <div key={shape.id} style={style} />;
-      })}
-    </div>
-  );
-};
-
 console.log("props", props);
 
 return (
   <div style={{ display: "flex" }}>
     <div style={{ width: "60vw", height: "80vh" }}>
-      <ShapeRenderer shapes={JSON.parse(value).shapes} />
-    </div>
-    <div>
-      <h3>Event Log</h3>
-      <div
-        style={{
-          width: "40vw",
-          height: "80vh",
-          padding: 8,
-          background: "#eee",
-          border: "none",
-          fontFamily: "monospace",
-          fontSize: 12,
-          borderLeft: "solid 2px #333",
-          display: "flex",
-          flexDirection: "column-reverse",
-          overflow: "auto",
-        }}
-      >
-        <EventLog changeEvents={storeEvents} uiEvents={uiEvents} />
-      </div>
+      <Canvas persistanceKey={"hello"} />
     </div>
   </div>
 );

@@ -23,24 +23,9 @@ const Footer = styled.div`
   background-color: #f0f0f0;
 `;
 
-const defaultValue = "";
+const defaultValue = value;
 const language = "json";
 const [path, setPath] = useState(props.path || "");
-
-if (path) {
-  const parts = path.split("/");
-  if (parts[1] === "widget") {
-    language = "javascript";
-    defaultValue = Social.get(path, "final");
-  } else {
-    language = "json";
-    defaultValue = JSON.stringify(
-      JSON.parse(Social.get(path, "final")),
-      null,
-      2
-    );
-  }
-}
 
 const [code, setCode] = useState(defaultValue);
 
@@ -61,29 +46,17 @@ function onCreate() {
 
 return (
   <Container>
-    <Header>
-      <input
-        defaultValue={path}
-        onBlur={(e) => setPath(e.target.value)}
-        placeholder={"path"}
-      />
-    </Header>
     <EditorContainer>
       <Widget
         src="devs.near/widget/MonacoEditor"
         props={{
-          path: path,
-          onChange: setCode,
-          language,
+          path: path, // this can be any string
+          onChange: setCode, // this is a function that will be called when the code changes
+          language, // javascript or json
           height: "70vh",
-          defaultValue,
+          defaultValue, // do not pass a state variable here.
         }}
       />
     </EditorContainer>
-    <Footer>
-      <button onClick={onCreate} disabled={!code || code === "null"}>
-        Create
-      </button>
-    </Footer>
   </Container>
 );

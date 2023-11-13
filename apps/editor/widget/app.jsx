@@ -57,6 +57,7 @@ function PanelHeader({ options, onChange }) {
   );
 }
 
+const [editorValue, setEditorValue] = useState("");
 const [editorSrc, setEditorSrc] = useState(
   "/*__@appAccount__*//widget/markdown.edit"
 );
@@ -73,13 +74,15 @@ function handleViewerSrcChange(value) {
   setViewerSrc(value);
 }
 
-function Editor({ value }) {
+function Editor({ value, setEditorValue }) {
   return (
     <Widget
       src={"/*__@appAccount__*//widget/provider"}
       props={{
         path: value,
+        editorValue,
         blockHeight: "final",
+        setEditorValue,
         Children: (p) => <Widget src={editorSrc} props={p} />,
       }}
     />
@@ -101,7 +104,7 @@ function Sidebar() {
 
 return (
   <Container>
-    <Panel>
+    <Panel style={{ maxWidth: "200px" }}>
       <Wrapper key={editorSrc}>
         <Sidebar />
       </Wrapper>
@@ -119,7 +122,7 @@ return (
         onChange={handleEditorSrcChange}
       />
       <Wrapper key={editorSrc}>
-        <Editor value={selectedItem} />
+        <Editor value={selectedItem} setEditorValue={setEditorValue} />
       </Wrapper>
     </Panel>
     <Panel>

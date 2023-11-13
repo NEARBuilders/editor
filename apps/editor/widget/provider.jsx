@@ -1,4 +1,4 @@
-const { path, blockHeight, Children } = props;
+const { path, blockHeight, editorValue, setEditorValue, Children } = props;
 
 let data = "";
 if (path) {
@@ -9,10 +9,8 @@ if (path) {
   }
 }
 
-const [editorValue, setEditorValue] = useState(data);
-
 function handleEditorChange(value) {
   setEditorValue(value);
 }
 
-return <Children value={data} onChange={handleEditorChange} />;
+return <Children value={data} onChange={handleEditorChange} path={path} />;
