@@ -1,3 +1,6 @@
+const { createFunctionCallProposal } =
+  VM.require("/*__@appAccount__*//widget/adapter.sputnik-dao") || (() => {});
+
 const Container = styled.div`
   display: flex;
   height: 100vh;
@@ -30,7 +33,7 @@ const Option = styled.option``;
 
 const Button = styled.button``;
 
-function PanelHeader({ options, onChange }) {
+function PanelHeader({ options, onChange, value }) {
   return (
     <Header>
       <Select onChange={(e) => onChange(e.target.value)}>
@@ -39,15 +42,27 @@ function PanelHeader({ options, onChange }) {
       </Select>
       <Button
         onClick={() =>
-          Social.set({
-            index: {
-              every: JSON.stringify({
-                key: "thing", // type
-                value: {
-                  src: "efiz.near/widget/Tree",
+          createFunctionCallProposal({
+            daoId: "build.sputnik-dao.near",
+            receiver_id: "social.near",
+            method_name: "set",
+            args: {
+              data: {
+                "build.sputnik-dao.near": {
+                  post: {
+                    main: JSON.stringify(value),
+                  },
+                  index: {
+                    post: JSON.stringify({
+                      key: "main",
+                      value: {
+                        type: "md",
+                      },
+                    }),
+                  },
                 },
-              }),
-            },
+              },
+            }
           })
         }
       >
@@ -58,6 +73,7 @@ function PanelHeader({ options, onChange }) {
 }
 
 const [editorValue, setEditorValue] = useState("");
+
 const [editorSrc, setEditorSrc] = useState(
   "/*__@appAccount__*//widget/markdown.edit"
 );
@@ -120,6 +136,7 @@ return (
           { value: "/*__@appAccount__*//widget/canvas.edit", label: "Canvas" },
         ]}
         onChange={handleEditorSrcChange}
+        value={editorValue}
       />
       <Wrapper key={editorSrc}>
         <Editor value={selectedItem} setEditorValue={setEditorValue} />
@@ -136,6 +153,7 @@ return (
           { value: "/*__@appAccount__*//widget/canvas.view", label: "Canvas" },
         ]}
         onChange={handleViewerSrcChange}
+        value={editorValue}
       />
       <Wrapper key={viewerSrc}>
         <Viewer value={editorValue} />
